@@ -1,17 +1,23 @@
-import { version } from '../../package.json';
-import { Router } from 'express';
-import facets from './facets';
+import Router from 'express';
 
-export default ({ config, db }) => {
-	let api = Router();
+/* import custom API modules */
+import login from './login';
 
-	// mount the facets resource
-	api.use('/facets', facets({ config, db }));
+export default ({
+	config
+}) => {
+	const api = Router();
 
-	// perhaps expose some API metadata at the root
 	api.get('/', (req, res) => {
-		res.json({ version });
+		res.json({
+			entry: 'hello'
+		});
 	});
+
+	// mount the login resource
+	api.use('/login', login({
+		config
+	}));
 
 	return api;
 }
