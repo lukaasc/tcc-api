@@ -17,12 +17,12 @@ export default () => {
 	});
 
 	api.post('/authenticate', (req, res) => {
-		if (!req.body.userId || !req.body.password) {
+		if (!req.body.username || !req.body.password) {
 			logger.log('error', `${_logPrefix} Invalid credentials!`);
 			return res.status(500).send('Credenciais inválidas');
 		}
 		UserModel.findOne({
-			'userId': req.body.userId
+			'username': req.body.username
 		}, (err, user) => {
 
 			if (err || !user) {
@@ -34,7 +34,7 @@ export default () => {
 				logger.log('info', 'Sessão encontrada, retornando sessão recuperada');
 
 				return res.json({
-					userId: user.userId,
+					username: user.username,
 					email: user.email,
 					token: user.session.token
 				});
@@ -48,7 +48,7 @@ export default () => {
 					return res.status(500).send('Erro ao criar sessão');
 				}
 				res.json({
-					userId: updatedUser.userId,
+					username: updatedUser.username,
 					email: updatedUser.email,
 					token: updatedUser.session.token
 				});
@@ -59,12 +59,12 @@ export default () => {
 	});
 
 	api.post('/register', (req, res) => {
-		if (!req.body.userId || !req.body.password || !req.body.email) {
+		if (!req.body.username || !req.body.password || !req.body.email) {
 			logger.log('error', `${_logPrefix} Invalid parameters!`);
 			return res.status(500).send('Parâmetros inválidos');
 		}
 		const newUser = UserModel({
-			userId: req.body.userId,
+			username: req.body.username,
 			password: req.body.password,
 			email: req.body.email
 		});

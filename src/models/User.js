@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import connection from '../db';
 
 const userSchema = new mongoose.Schema({
-    userId: {
+    username: {
         type: String,
         unique: true,
         lowercase: true,
@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
             default: Date.now
         }
 
-    }
+    },
+    currentQueue: String
 });
 
 const UserModel = connection.model('User', userSchema);

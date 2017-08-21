@@ -31,6 +31,9 @@ app.use(middleware({
 	config
 }));
 
+// serve frontend code
+app.use(express.static('public'));
+
 // api router
 app.use('/api', api({
 	config
