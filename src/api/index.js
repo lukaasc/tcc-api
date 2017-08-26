@@ -1,11 +1,11 @@
 import Router from 'express';
+import HospitalModel from '../models/Hospital';
 
 /* import custom API modules */
 import login from './login';
+import queue from './queue';
 
-export default ({
-	config
-}) => {
+export default () => {
 	const api = Router();
 
 	api.get('/', (req, res) => {
@@ -15,9 +15,10 @@ export default ({
 	});
 
 	// mount the login resource
-	api.use('/login', login({
-		config
-	}));
+	api.use('/login', login());
+
+	// mount the queue resource
+	api.use('/queue', queue());
 
 	return api;
 }

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import connection from '../db';
 
 const hospitalSchema = new mongoose.Schema({
-    hospitalId: {
+    hospitalCode: {
         type: String,
         unique: true,
         lowercase: true,
@@ -27,6 +27,7 @@ const hospitalSchema = new mongoose.Schema({
         leaveDate: Date
     }]
 });
+
 
 const HospitalModel = connection.model('Hospital', hospitalSchema);
 
