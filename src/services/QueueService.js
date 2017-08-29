@@ -51,11 +51,23 @@ class QueueService {
         return new Promise((resolve, reject) => {
             HospitalModel.findOne({
                 hospitalCode
-            }, (err, hospital) => {
+            }, async(err, hospital) => {
                 if (err || !hospital) {
                     logger.log('error', `${_logPrefix} Not able to find the hospital \n${err}`);
 
                     return reject(NOT_FOUND);
+                }
+
+                /** Checks if user already has a queue */
+                if (username) {
+                    logger.log('info', `${_logPrefix} Handling [-- ${username} --] current queue`);
+                    var user;
+
+                    try {
+                        user = await this.checkUserCurrentQueue(username, hospital.hospitalCode);
+                    } catch (err) {
+                        return reject(err || '-> User not found');
+                    }
                 }
 
                 hospital.queue.push({
@@ -68,10 +80,34 @@ class QueueService {
                         return reject(PUSH_ERROR);
                     }
 
-                    return resolve(updatedHospital);
+                    user.save((err) => {
+                        if (err) return reject(err)
+
+                        return resolve(updatedHospital);
+                    })
+
                 });
             })
         });
+    }
+
+    static checkUserCurrentQueue(username, hospitalCode) {
+        return new Promise((resolve, reject) => {
+            UserModel.findOne({
+                username
+            }, (err, user) => {
+                if (err || !user) {
+                    logger.log('error', `${_logPrefix} Could not find user to check current queue status`)
+                    return reject(err);
+                }
+
+                if (user.currentQueue) return reject('User already in a Queue');
+
+                user.currentQueue = hospitalCode
+
+                resolve(user);
+            })
+        })
     }
 
     /**

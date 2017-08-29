@@ -36,7 +36,8 @@ export default () => {
 				return res.json({
 					username: user.username,
 					email: user.email,
-					token: user.session.token
+					token: user.session.token,
+					currentQueue: user.currentQueue
 				});
 			}
 
@@ -50,7 +51,8 @@ export default () => {
 				res.json({
 					username: updatedUser.username,
 					email: updatedUser.email,
-					token: updatedUser.session.token
+					token: updatedUser.session.token,
+					currentQueue: updatedUser.currentQueue
 				});
 			});
 

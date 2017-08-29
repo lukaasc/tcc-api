@@ -41,7 +41,7 @@ export default () => {
         logger.log('info', `${_logPrefix} Going to add a new user to ${req.body.hospitalCode} hospital!`);
 
         QueueService.handlePush(req.body.hospitalCode, req.body.username).then(updatedHospital => res.json(updatedHospital)).catch(err => {
-            logger.log('error', `${_logPrefix} Error inserting user - hospital ${err}`);
+            logger.log('error', `${_logPrefix} Error inserting user - ${err}`);
             return res.status(500).send('Erro ao inserir usuário na fila');
         });
     });
