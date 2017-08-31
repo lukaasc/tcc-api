@@ -14,7 +14,7 @@ class QueueService {
     /**
      * Returns a list of available hospital to the user
      */
-    static getAvailableHospitals() {
+    static getAvailableHospitals(username) {
         logger.log('info', `${_logPrefix} Fetching list of available hospitals`);
 
         return new Promise((resolve, reject) => {
@@ -27,6 +27,15 @@ class QueueService {
                     location: 1,
                     queue: {
                         $size: '$queue'
+                    },
+                    currentQueue: {
+                        $filter: {
+                            input: "$queue",
+                            as: "item",
+                            cond: {
+                                $eq: ["$$item.username", username]
+                            }
+                        }
                     }
                 }
             }, {
@@ -64,7 +73,7 @@ class QueueService {
                     var user;
 
                     try {
-                        user = await this.checkUserCurrentQueue(username, hospital.hospitalCode);
+                        user = await this.changeUserCurrentQueue(username, hospital.hospitalCode);
                     } catch (err) {
                         return reject(err || '-> User not found');
                     }
@@ -91,7 +100,7 @@ class QueueService {
         });
     }
 
-    static checkUserCurrentQueue(username, hospitalCode) {
+    static changeUserCurrentQueue(username, hospitalCode) {
         return new Promise((resolve, reject) => {
             UserModel.findOne({
                 username
@@ -101,6 +110,10 @@ class QueueService {
                     return reject(err);
                 }
 
+                if (!hospitalCode) {
+                    user.currentQueue = null;
+                    resolve(user);
+                }
                 if (user.currentQueue) return reject('User already in a Queue');
 
                 user.currentQueue = hospitalCode
@@ -121,7 +134,7 @@ class QueueService {
         return new Promise((resolve, reject) => {
             HospitalModel.findOne({
                 hospitalCode
-            }, (err, hospital) => {
+            }, async(err, hospital) => {
                 if (err || !hospital) {
                     logger.log('error', `${_logPrefix} Not able to find the hospital \n${err}`);
 
@@ -136,6 +149,8 @@ class QueueService {
                         return reject(POP_ERROR);
                     }
                     hospital.queue.splice(position, 1);
+
+                    var user = await this.changeUserCurrentQueue(username);
                 }
                 hospital.save((err, updatedHospital) => {
                     if (err) {
@@ -143,7 +158,14 @@ class QueueService {
                         return reject(POP_ERROR);
                     }
 
-                    return resolve(updatedHospital);
+                    if (user) {
+                        user.save(err => {
+                            if (err) return reject(err)
+
+                            return resolve(updatedHospital);
+                        })
+                    } else
+                        return resolve(updatedHospital);
                 });
             })
         });

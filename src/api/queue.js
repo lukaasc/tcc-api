@@ -7,7 +7,7 @@ import QueueService from '../services/QueueService';
 
 export default () => {
     const api = Router();
-    const _logPrefix = 'Queue API - ';
+    const _logPrefix = '[Queue API] - ';
 
     /**
      * Entry point for Queue resource
@@ -21,10 +21,10 @@ export default () => {
     /**
      * Returns available hospital to the user
      */
-    api.get('/availableHospitals', (req, res) => {
+    api.get('/availableHospitals/:username', (req, res) => {
         logger.log('info', `${_logPrefix} Going to fetch available hospital list`);
 
-        QueueService.getAvailableHospitals().then(hospitalList => res.json(hospitalList)).catch(err => {
+        QueueService.getAvailableHospitals(req.params.username).then(hospitalList => res.json(hospitalList)).catch(err => {
             logger.log('error', `${_logPrefix} Error fetching hospital list \n${err}`);
             return res.status(500).send('Erro ao tentar recuperar lista de hospitais disponíveis');
         });
