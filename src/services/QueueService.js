@@ -36,7 +36,13 @@ class QueueService {
                                 $eq: ["$$item.username", username]
                             }
                         }
+                    },
+                    currentPosition: {
+                        $indexOfArray: [
+                            "$queue.username", username
+                        ]
                     }
+
                 }
             }, {
                 $sort: {
@@ -45,6 +51,7 @@ class QueueService {
             }], (err, hospitalList) => {
                 if (err) return reject(err);
 
+                console.log(hospitalList);
                 resolve(hospitalList);
             })
         });
@@ -70,17 +77,15 @@ class QueueService {
                 /** Checks if user already has a queue */
                 if (username) {
                     logger.log('info', `${_logPrefix} Handling [-- ${username} --] current queue`);
-                    var user;
-
                     try {
-                        user = await this.changeUserCurrentQueue(username, hospital.hospitalCode);
+                        var user = await this.changeUserCurrentQueue(username, hospital.hospitalCode);
                     } catch (err) {
                         return reject(err || '-> User not found');
                     }
                 }
 
                 hospital.queue.push({
-                    username
+                    username: !username ? '' : username
                 })
 
                 hospital.save((err, updatedHospital) => {
@@ -89,11 +94,13 @@ class QueueService {
                         return reject(PUSH_ERROR);
                     }
 
-                    user.save((err) => {
-                        if (err) return reject(err)
+                    if (username) {
+                        user.save((err) => {
+                            if (err) return reject(err)
 
-                        return resolve(updatedHospital);
-                    })
+                            return resolve(updatedHospital);
+                        })
+                    } else return resolve(updatedHospital);
 
                 });
             })
