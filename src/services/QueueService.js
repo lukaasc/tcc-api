@@ -51,7 +51,6 @@ class QueueService {
             }], (err, hospitalList) => {
                 if (err) return reject(err);
 
-                console.log(hospitalList);
                 resolve(hospitalList);
             })
         });

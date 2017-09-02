@@ -54,7 +54,7 @@ export default () => {
     api.post('/pop', (req, res) => {
         if (!req.body.hospitalCode) return res.status(500).send('Hospital code not provided');
 
-        logger.log('info', `${_logPrefix} Going to remove next user from ${req.body.hospitalCode} hospital!`);
+        logger.log('info', `${_logPrefix} Going to remove next user from ${req.body.hospitalCode}!`);
 
         QueueService.handlePop(req.body.hospitalCode, req.body.username).then(updatedHospital => res.json(updatedHospital)).catch(err => {
             logger.log('error', `${_logPrefix} Error removing user - hospital ${err}`);
