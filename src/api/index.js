@@ -1,5 +1,4 @@
 import Router from 'express';
-import HospitalModel from '../models/Hospital';
 
 /* import custom API modules */
 import login from './login';
