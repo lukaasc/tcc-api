@@ -30,6 +30,15 @@ export default () => {
         });
     });
 
+    api.get('/getMediumTime/:hospitalCode', (req, res) => {
+        logger.log('info', `${_logPrefix} Going to fetch queue waiting time for ${req.params.hospitalCode}`);
+
+        QueueService.calculateMediumTime(req.params.hospitalCode).then(waitingTime => res.json(waitingTime)).catch(err => {
+            logger.log('error', `${_logPrefix} Error fetching queue waiting medium time \n${err}`);
+            return res.status(500).send('Erro ao tentar calcular tempo de espera médio do hospital');
+        });
+    });
+
     /**
      * Inserts a new user in a specific hospital queue
      * @param req.body.hospitalCode

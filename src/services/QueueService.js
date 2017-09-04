@@ -59,6 +59,37 @@ class QueueService {
             })
         });
     }
+
+    /**
+     * Calculates waiting medium time for a specific queue
+     * @param {String} hospitalCode 
+     */
+    static calculateMediumTime(hospitalCode) {
+        return new Promise((resolve, reject) => {
+            //resolve('10 min' + hospitalCode);
+            HospitalAnalysisModel.findByCurrentPeriod(hospitalCode, (err, recordsList) => {
+                if (err) return reject(err);
+
+                if (recordsList.length > 0) {
+                    try {
+                        let totalTime = 0;
+
+                        recordsList.map(element =>
+                            totalTime += Number(element.timeSpent)
+                        );
+
+                        totalTime = moment.utc(totalTime / recordsList.length).format('HH:mm:ss');
+
+                        return resolve(totalTime);
+                    } catch (err) {
+                        return reject(`Error calculating medium time for ${hospitalCode} \n ${err}`);
+                    }
+                }
+                reject(`No sufficient data to calculate medium time for ${hospitalCode}`);
+            });
+
+        });
+    }
     /**
      * Pushs a new user into a specific hospital Queue
      * @param {String} hospitalCode 
@@ -195,12 +226,10 @@ class QueueService {
 
     static createAnalyticsData(removedUser, hospitalCode) {
         logger.log('info', `${_logPrefix} Calculating time spent in queue for popped user`);
-        console.log(removedUser);
 
-        const now = moment(new Date()); // current date
-        const joinDate = moment(new Date(removedUser[0].joinDate));
-
-        const timeSpent = moment.duration(now.diff(joinDate)).as('milliseconds');
+        const now = moment(new Date()), // current date
+            joinDate = moment(new Date(removedUser[0].joinDate)),
+            timeSpent = moment.duration(now.diff(joinDate)).as('milliseconds');
 
         const data = new HospitalAnalysisModel({
             hospitalCode,
