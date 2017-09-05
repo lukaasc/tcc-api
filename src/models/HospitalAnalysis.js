@@ -10,6 +10,12 @@ const hospitalAnalyseSchema = new mongoose.Schema({
         trim: true,
         index: true
     },
+    joinDate: {
+        type: Date
+    },
+    leaveDate: {
+        type: Date
+    },
     timeSpent: {
         type: String
     }

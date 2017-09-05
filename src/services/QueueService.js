@@ -227,12 +227,14 @@ class QueueService {
     static createAnalyticsData(removedUser, hospitalCode) {
         logger.log('info', `${_logPrefix} Calculating time spent in queue for popped user`);
 
-        const now = moment(new Date()), // current date
+        const leaveDate = moment(new Date()), // current date
             joinDate = moment(new Date(removedUser[0].joinDate)),
-            timeSpent = moment.duration(now.diff(joinDate)).as('milliseconds');
+            timeSpent = moment.duration(leaveDate.diff(joinDate)).as('milliseconds');
 
         const data = new HospitalAnalysisModel({
             hospitalCode,
+            joinDate,
+            leaveDate,
             timeSpent
         });
 
