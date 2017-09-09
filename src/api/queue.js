@@ -5,7 +5,7 @@ import {
 import Router from 'express';
 import QueueService from '../services/QueueService';
 
-export default () => {
+export default (io) => {
     const api = Router();
     const _logPrefix = '[Queue API] - ';
 
@@ -65,7 +65,7 @@ export default () => {
 
         logger.log('info', `${_logPrefix} Going to remove next user from ${req.body.hospitalCode}!`);
 
-        QueueService.handlePop(req.body.hospitalCode, req.body.username).then(updatedHospital => res.json(updatedHospital)).catch(err => {
+        QueueService.handlePop(req.body.hospitalCode, req.body.username, io).then(updatedHospital => res.json(updatedHospital)).catch(err => {
             logger.log('error', `${_logPrefix} Error removing user - hospital ${err}`);
             return res.status(500).send('Erro ao remover usuário da fila');
         });

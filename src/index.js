@@ -1,6 +1,7 @@
 import http from 'http'; // eslint-disable-line import/no-nodejs-modules
 import express from 'express';
 import socket from 'socket.io';
+import socketService from './services/SocketService.js';
 import cors from 'cors';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
@@ -14,12 +15,8 @@ app.server = http.createServer(app);
 /**
  * Initiates socket.io for real-time updates
  */
-/* eslint-disable */
 const io = socket(app.server);
-io.on('connection', socket => {
-	console.log('[Socket.io] --> New connection received');
-})
-/* eslint-enable */
+socketService(io);
 
 // logger
 app.use(morgan('dev'));
@@ -46,7 +43,7 @@ app.use(middleware({
 app.use(express.static('public'));
 
 // api router
-app.use('/api', api());
+app.use('/api', api(io));
 
 app.server.listen(process.env.PORT || config.port, () => {
 	console.log(`Started on port ${app.server.address().port}`); // eslint-disable-line no-console

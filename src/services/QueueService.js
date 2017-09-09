@@ -10,6 +10,7 @@ import HospitalAnalysisModel from '../models/HospitalAnalysis';
 const NOT_FOUND = 'NOT_FOUND',
     PUSH_ERROR = 'PUSH_ERROR',
     POP_ERROR = 'POP_ERROR',
+    EMPTY_QUEUE = 'EMPTY_QUEUE',
     _logPrefix = '[Queue Service] -';
 
 class QueueService {
@@ -146,7 +147,7 @@ class QueueService {
      * @param {String} hospitalCode 
      * @param {String} username 
      */
-    static handlePop(hospitalCode, username) {
+    static handlePop(hospitalCode, username, io) {
         logger.log('info', `${_logPrefix} Handling pop operation on ${hospitalCode}`);
 
         return new Promise((resolve, reject) => {
@@ -159,19 +160,26 @@ class QueueService {
                     return reject(NOT_FOUND);
                 }
 
+                // if empty queue, reject promise
+                if (hospital.queue.length <= 0) return reject(EMPTY_QUEUE);
+
                 // keeps removed user information to handle analytics data
                 let removedUser = [];
 
+                // In case no user is provided, just remove the next one
                 if (!username) {
                     removedUser.push(hospital.queue.shift());
-                } else {
+                } else { // if a username is provided, remove user from specific position
                     const position = hospital.queue.findIndex(element => element.username === username);
                     if (position === -1) {
                         return reject(POP_ERROR);
                     }
                     removedUser = hospital.queue.splice(position, 1);
-                    var user = await this.changeUserCurrentQueue(username);
                 }
+
+                // remove current queue information from User model
+                const user = await this.changeUserCurrentQueue(removedUser[0].username);
+
                 hospital.save((err, updatedHospital) => {
                     if (err) {
                         logger.log('error', `${_logPrefix} Error poping user from the queue`);
@@ -182,12 +190,12 @@ class QueueService {
                         user.save(err => {
                             if (err) return reject(err)
 
-                            this.createAnalyticsData(removedUser, updatedHospital.hospitalCode);
+                            this.createAnalyticsData(removedUser, updatedHospital, io);
 
                             return resolve(updatedHospital);
                         })
                     } else {
-                        this.createAnalyticsData(removedUser, updatedHospital.hospitalCode);
+                        this.createAnalyticsData(removedUser, updatedHospital, io);
 
                         return resolve(updatedHospital);
                     }
@@ -224,12 +232,14 @@ class QueueService {
         })
     }
 
-    static createAnalyticsData(removedUser, hospitalCode) {
+    static createAnalyticsData(removedUser, updatedHospital, io) {
         logger.log('info', `${_logPrefix} Calculating time spent in queue for popped user`);
+
 
         const leaveDate = moment(new Date()), // current date
             joinDate = moment(new Date(removedUser[0].joinDate)),
-            timeSpent = moment.duration(leaveDate.diff(joinDate)).as('milliseconds');
+            timeSpent = moment.duration(leaveDate.diff(joinDate)).as('milliseconds'),
+            hospitalCode = updatedHospital.hospitalCode;
 
         const data = new HospitalAnalysisModel({
             hospitalCode,
@@ -242,8 +252,22 @@ class QueueService {
             if (err) throw err;
 
             logger.log('info', `${_logPrefix} Analytics data saved!`);
+
+            this.notifyHospitalChange(updatedHospital, io);
         })
 
+    }
+
+    static async notifyHospitalChange(updatedHospital, io) {
+        logger.log('info', `${_logPrefix} Going to recalculate ${updatedHospital.hospitalCode} data and notify users!`);
+
+        const response = {
+            hospitalCode: updatedHospital.hospitalCode,
+            queue: updatedHospital.queue,
+            mediumTime: await this.calculateMediumTime(updatedHospital.hospitalCode)
+        }
+
+        io.emit('hospitalChanged', response);
     }
 }
 
