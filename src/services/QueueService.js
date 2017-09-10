@@ -178,7 +178,9 @@ class QueueService {
                 }
 
                 // remove current queue information from User model
-                const user = await this.changeUserCurrentQueue(removedUser[0].username);
+                if (removedUser[0].username) {
+                    var user = await this.changeUserCurrentQueue(removedUser[0].username);
+                }
 
                 hospital.save((err, updatedHospital) => {
                     if (err) {
