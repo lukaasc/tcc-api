@@ -60975,14 +60975,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var cov_1kb30i4s2g = function () {
-  var path = "/Users/lukaasc/git/tcc_static/src/app/services/socket.service.js",
-      hash = "5f110fe9ef4029cafaf9aa32ed5fe5cc6de1a7a6",
+  var path = '/Users/lukaasc/git/tcc_static/src/app/services/socket.service.js',
+      hash = '78976c99a8f99d5ef1986b5d73e25d936cd92623',
       global = new Function('return this')(),
-      gcv = "__coverage__",
+      gcv = '__coverage__',
       coverageData = {
-    path: "/Users/lukaasc/git/tcc_static/src/app/services/socket.service.js",
+    path: '/Users/lukaasc/git/tcc_static/src/app/services/socket.service.js',
     statementMap: {
-      "0": {
+      '0': {
         start: {
           line: 2,
           column: 18
@@ -60992,80 +60992,100 @@ var cov_1kb30i4s2g = function () {
           column: 20
         }
       },
-      "1": {
+      '1': {
         start: {
           line: 4,
           column: 2
         },
         end: {
-          line: 24,
+          line: 27,
           column: 4
         }
       },
-      "2": {
+      '2': {
         start: {
-          line: 10,
-          column: 23
+          line: 7,
+          column: 19
         },
         end: {
-          line: 10,
-          column: 27
+          line: 9,
+          column: 8
         }
       },
-      "3": {
+      '3': {
         start: {
-          line: 12,
+          line: 11,
           column: 6
         },
         end: {
+          line: 13,
+          column: 7
+        }
+      },
+      '4': {
+        start: {
+          line: 12,
+          column: 8
+        },
+        end: {
+          line: 12,
+          column: 22
+        }
+      },
+      '5': {
+        start: {
           line: 15,
+          column: 6
+        },
+        end: {
+          line: 18,
           column: 9
         }
       },
-      "4": {
+      '6': {
         start: {
-          line: 13,
+          line: 16,
           column: 8
         },
         end: {
-          line: 13,
+          line: 16,
           column: 45
         }
       },
-      "5": {
+      '7': {
         start: {
-          line: 14,
+          line: 17,
           column: 8
         },
         end: {
-          line: 14,
+          line: 17,
           column: 99
         }
       },
-      "6": {
+      '8': {
         start: {
-          line: 19,
+          line: 22,
           column: 6
         },
         end: {
-          line: 19,
+          line: 22,
           column: 31
         }
       },
-      "7": {
+      '9': {
         start: {
-          line: 22,
+          line: 25,
           column: 6
         },
         end: {
-          line: 22,
+          line: 25,
           column: 27
         }
       }
     },
     fnMap: {
-      "0": {
-        name: "Socket",
+      '0': {
+        name: 'Socket',
         decl: {
           start: {
             line: 1,
@@ -61082,90 +61102,126 @@ var cov_1kb30i4s2g = function () {
             column: 18
           },
           end: {
-            line: 25,
+            line: 28,
             column: 1
           }
         },
         line: 1
       },
-      "1": {
-        name: "(anonymous_1)",
+      '1': {
+        name: '(anonymous_1)',
         decl: {
           start: {
-            line: 12,
+            line: 15,
             column: 35
           },
           end: {
-            line: 12,
+            line: 15,
             column: 36
           }
         },
         loc: {
           start: {
-            line: 12,
+            line: 15,
             column: 43
           },
           end: {
-            line: 15,
+            line: 18,
             column: 7
           }
         },
-        line: 12
+        line: 15
       }
     },
     branchMap: {
-      "0": {
+      '0': {
         loc: {
           start: {
-            line: 14,
+            line: 11,
+            column: 6
+          },
+          end: {
+            line: 13,
+            column: 7
+          }
+        },
+        type: 'if',
+        locations: [{
+          start: {
+            line: 11,
+            column: 6
+          },
+          end: {
+            line: 13,
+            column: 7
+          }
+        }, {
+          start: {
+            line: 11,
+            column: 6
+          },
+          end: {
+            line: 13,
+            column: 7
+          }
+        }],
+        line: 11
+      },
+      '1': {
+        loc: {
+          start: {
+            line: 17,
             column: 15
           },
           end: {
-            line: 14,
+            line: 17,
             column: 98
           }
         },
-        type: "cond-expr",
+        type: 'cond-expr',
         locations: [{
           start: {
-            line: 14,
+            line: 17,
             column: 59
           },
           end: {
-            line: 14,
+            line: 17,
             column: 91
           }
         }, {
           start: {
-            line: 14,
+            line: 17,
             column: 94
           },
           end: {
-            line: 14,
+            line: 17,
             column: 98
           }
         }],
-        line: 14
+        line: 17
       }
     },
     s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0
+      '0': 0,
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+      '6': 0,
+      '7': 0,
+      '8': 0,
+      '9': 0
     },
     f: {
-      "0": 0,
-      "1": 0
+      '0': 0,
+      '1': 0
     },
     b: {
-      "0": [0, 0]
+      '0': [0, 0],
+      '1': [0, 0]
     },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
+    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
   },
       coverage = global[gcv] || (global[gcv] = {});
 
@@ -61186,29 +61242,38 @@ function Socket() {
   return {
     init: function init() {
       /* eslint-disable */
-      // const socket = io('http://localhost:8080', {
-      //   transports: ['websocket', 'xhr-polling']
-      // });
-      var socket = (cov_1kb30i4s2g.s[2]++, io());
+      var socket = (cov_1kb30i4s2g.s[2]++, io('http://localhost:8080', {
+        transports: ['websocket', 'xhr-polling']
+      }));
 
       cov_1kb30i4s2g.s[3]++;
-      socket.on('hospitalChanged', function (data) {
-        cov_1kb30i4s2g.f[1]++;
+      if (!socket) {
+        cov_1kb30i4s2g.b[0][0]++;
         cov_1kb30i4s2g.s[4]++;
 
+        socket = io();
+      } else {
+        cov_1kb30i4s2g.b[0][1]++;
+      }
+
+      cov_1kb30i4s2g.s[5]++;
+      socket.on('hospitalChanged', function (data) {
+        cov_1kb30i4s2g.f[1]++;
+        cov_1kb30i4s2g.s[6]++;
+
         console.log("Hospital mudou!", data);
-        cov_1kb30i4s2g.s[5]++;
-        return watches.hasOwnProperty(data.hospitalCode) ? (cov_1kb30i4s2g.b[0][0]++, watches[data.hospitalCode](data)) : (cov_1kb30i4s2g.b[0][1]++, null);
+        cov_1kb30i4s2g.s[7]++;
+        return watches.hasOwnProperty(data.hospitalCode) ? (cov_1kb30i4s2g.b[1][0]++, watches[data.hospitalCode](data)) : (cov_1kb30i4s2g.b[1][1]++, null);
       });
       /* eslint-enable */
     },
     watch: function watch(item, callback) {
-      cov_1kb30i4s2g.s[6]++;
+      cov_1kb30i4s2g.s[8]++;
 
       watches[item] = callback;
     },
     unWatch: function unWatch(item) {
-      cov_1kb30i4s2g.s[7]++;
+      cov_1kb30i4s2g.s[9]++;
 
       delete watches[item];
     }
