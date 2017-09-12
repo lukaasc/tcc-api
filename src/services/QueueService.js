@@ -96,7 +96,7 @@ class QueueService {
      * @param {String} hospitalCode 
      * @param {String} username 
      */
-    static handlePush(hospitalCode, username) {
+    static handlePush(hospitalCode, username, io) {
         logger.log('info', `${_logPrefix} Handling push operation on ${hospitalCode}`);
 
         return new Promise((resolve, reject) => {
@@ -133,9 +133,15 @@ class QueueService {
                         user.save((err) => {
                             if (err) return reject(err)
 
+                            this.notifyHospitalChange(updatedHospital, io, true);
+
                             return resolve(updatedHospital);
                         })
-                    } else return resolve(updatedHospital);
+                    } else {
+                        this.notifyHospitalChange(updatedHospital, io, true);
+
+                        return resolve(updatedHospital);
+                    }
 
                 });
             })
@@ -260,9 +266,19 @@ class QueueService {
 
     }
 
-    static async notifyHospitalChange(updatedHospital, io) {
+    static async notifyHospitalChange(updatedHospital, io, push = false) {
         logger.log('info', `${_logPrefix} Going to recalculate ${updatedHospital.hospitalCode} data and notify users!`);
 
+        if (push) {
+            const response = {
+                hospitalCode: updatedHospital.hospitalCode,
+                queue: updatedHospital.queue,
+                action: 'push'
+            }
+            io.emit('hospitalChanged', response);
+
+            return;
+        }
         const response = {
             hospitalCode: updatedHospital.hospitalCode,
             queue: updatedHospital.queue,
