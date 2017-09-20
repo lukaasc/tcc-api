@@ -53,7 +53,7 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
                         day: {
                             $dateToString: {
                                 format: "%d-%m-%Y",
-                                date: "$createdAt"
+                                date: "$joinDate"
                             }
                         }
                     },
