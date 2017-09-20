@@ -67,7 +67,6 @@ class QueueService {
      */
     static calculateMediumTime(hospitalCode) {
         return new Promise((resolve, reject) => {
-            //resolve('10 min' + hospitalCode);
             HospitalAnalysisModel.findByCurrentPeriod(hospitalCode, (err, recordsList) => {
                 if (err) return reject(err);
 
@@ -240,6 +239,12 @@ class QueueService {
         })
     }
 
+    /**
+     * Creates analytics and historical data for the hospital after a user is removed from the queue
+     * @param {List} removedUser 
+     * @param {Object} updatedHospital 
+     * @param {Object} io 
+     */
     static createAnalyticsData(removedUser, updatedHospital, io) {
         logger.log('info', `${_logPrefix} Calculating time spent in queue for popped user`);
 
@@ -266,6 +271,12 @@ class QueueService {
 
     }
 
+    /**
+     * Notifies client side application about changes occured in user's current queue
+     * @param {Object} updatedHospital 
+     * @param {Object} io 
+     * @param {Boolean} push 
+     */
     static async notifyHospitalChange(updatedHospital, io, push = false) {
         logger.log('info', `${_logPrefix} Going to recalculate ${updatedHospital.hospitalCode} data and notify users!`);
 
@@ -287,6 +298,23 @@ class QueueService {
 
         io.emit('hospitalChanged', response);
     }
+
+    /**
+     * Aggregates statistic data and information for a hospital
+     * @param {Object} params @hospitalCode @interval
+     */
+    static getStatistic(params) {
+        logger.log('info', `${_logPrefix} Aggregating data for hospital ${params.hospitalCode}!`);
+
+        return new Promise((resolve, reject) => {
+            HospitalAnalysisModel.aggregateStatisticData(params.hospitalCode, params.interval, (err, data) => {
+                if (err) return reject(err);
+
+                resolve(data);
+            });
+        })
+    }
+
 }
 
 export default QueueService;

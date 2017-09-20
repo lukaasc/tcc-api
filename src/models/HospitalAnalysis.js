@@ -11,13 +11,15 @@ const hospitalAnalyseSchema = new mongoose.Schema({
         index: true
     },
     joinDate: {
-        type: Date
+        type: Date,
+        index: true
     },
     leaveDate: {
-        type: Date
+        type: Date,
+        index: true
     },
     timeSpent: {
-        type: String
+        type: Number
     }
 }, {
     timestamps: true
@@ -33,6 +35,45 @@ hospitalAnalyseSchema.statics.findByCurrentPeriod = function (hospitalCode, call
         }
     }).exec(callback);
 };
+
+hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, interval, callback) {
+    const initialDate = moment().subtract(30, 'days').toDate();
+
+    return this.aggregate(
+        [{
+                $match: {
+                    createdAt: {
+                        $gte: initialDate
+                    }
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        day: {
+                            $dayOfMonth: "$createdAt"
+                        },
+                        month: {
+                            $month: "$createdAt"
+                        },
+                        year: {
+                            $year: "$createdAt"
+                        }
+                    },
+                    mediumTime: {
+                        $avg: {
+                            $sum: "$timeSpent"
+                        }
+                    },
+                    count: {
+                        $sum: 1
+                    }
+                },
+            }
+        ]
+    ).exec(callback);
+
+}
 
 const HospitalAnalysisModel = connection.model('HospitalAnalysis', hospitalAnalyseSchema);
 
