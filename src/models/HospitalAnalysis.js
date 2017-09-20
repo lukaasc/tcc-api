@@ -51,13 +51,10 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
                 $group: {
                     _id: {
                         day: {
-                            $dayOfMonth: "$createdAt"
-                        },
-                        month: {
-                            $month: "$createdAt"
-                        },
-                        year: {
-                            $year: "$createdAt"
+                            $dateToString: {
+                                format: "%d-%m-%Y",
+                                date: "$createdAt"
+                            }
                         }
                     },
                     mediumTime: {
@@ -69,6 +66,15 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
                         $sum: 1
                     }
                 },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    mediumTime: {
+                        $floor: "$mediumTime"
+                    },
+                    count: 1
+                }
             }
         ]
     ).exec(callback);
