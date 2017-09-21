@@ -37,13 +37,16 @@ hospitalAnalyseSchema.statics.findByCurrentPeriod = function (hospitalCode, call
 };
 
 hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, interval, callback) {
-    const initialDate = moment().subtract(30, 'days').toDate();
+    const initialDate = moment().subtract(5, 'days').toDate();
 
     return this.aggregate(
         [{
                 $match: {
                     createdAt: {
                         $gte: initialDate
+                    },
+                    hospitalCode: {
+                        $eq: hospitalCode
                     }
                 },
             },
