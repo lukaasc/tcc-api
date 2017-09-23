@@ -78,6 +78,11 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
                     },
                     count: 1
                 }
+            },
+            {
+                $sort: {
+                    _id: 1
+                }
             }
         ]
     ).exec(callback);
