@@ -42,7 +42,7 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
     return this.aggregate(
         [{
                 $match: {
-                    createdAt: {
+                    joinDate: {
                         $gte: initialDate
                     },
                     hospitalCode: {
@@ -73,9 +73,7 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
             {
                 $project: {
                     _id: 1,
-                    mediumTime: {
-                        $floor: "$mediumTime"
-                    },
+                    mediumTime: 1,
                     count: 1
                 }
             },
