@@ -55,7 +55,7 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
                     _id: {
                         day: {
                             $dateToString: {
-                                format: "%d-%m-%Y",
+                                format: "%m-%d-%Y",
                                 date: "$joinDate"
                             }
                         }
@@ -85,6 +85,27 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
         ]
     ).exec(callback);
 
+}
+
+hospitalAnalyseSchema.statics.aggregateRecommendedHospital = function (callback) {
+    return this.aggregate(
+        [{
+                $group: {
+                    _id: "$hospitalCode",
+                    mediumTime: {
+                        $avg: {
+                            $sum: "$timeSpent"
+                        }
+                    }
+                },
+            },
+            {
+                $sort: {
+                    mediumTime: 1
+                }
+            }
+        ]
+    ).exec(callback);
 }
 
 const HospitalAnalysisModel = connection.model('HospitalAnalysis', hospitalAnalyseSchema);

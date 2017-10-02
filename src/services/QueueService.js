@@ -267,6 +267,7 @@ class QueueService {
             logger.log('info', `${_logPrefix} Analytics data saved!`);
 
             this.notifyHospitalChange(updatedHospital, io);
+            this.notifyHospitalRecommendation(io);
         })
 
     }
@@ -313,6 +314,21 @@ class QueueService {
                 resolve(data);
             });
         })
+    }
+
+
+    /**
+     * Notifies client side application about recommended hospital
+     * @param {Object} io 
+     */
+    static async notifyHospitalRecommendation(io) {
+        logger.log('info', `${_logPrefix} Going to calculate best hospital for user`);
+
+        HospitalAnalysisModel.aggregateRecommendedHospital((err, data) => {
+            if (err) return err;
+
+            io.emit('hospitalRecommendation', data[0]);
+        });
     }
 
 }
