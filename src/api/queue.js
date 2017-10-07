@@ -31,6 +31,9 @@ export default (io) => {
         });
     });
 
+    /**
+     * Returns medium time for a specific hospital
+     */
     api.get('/getMediumTime/:hospitalCode', (req, res) => {
         logger.log('info', `${_logPrefix} Going to fetch queue waiting time for ${req.params.hospitalCode}`);
 
@@ -38,6 +41,19 @@ export default (io) => {
             logger.log('error', `${_logPrefix} Error fetching queue waiting medium time \n${err}`);
 
             return res.status(500).send('Erro ao tentar calcular tempo de espera médio do hospital');
+        });
+    });
+
+    /**
+     * Returns medium time aggregated by hospital
+     */
+    api.get('/getAllMediumTime', (req, res) => {
+        logger.log('info', `${_logPrefix} Going to fetch queue waiting time for all hospitals`);
+
+        QueueService.calculateAllMediumTime().then(response => res.json(response)).catch(err => {
+            logger.log('error', `${_logPrefix} Error fetching queue waiting medium time for all hospitals \n${err}`);
+
+            return res.status(500).send('Erro ao tentar calcular tempo de espera médio dos hospitais');
         });
     });
 

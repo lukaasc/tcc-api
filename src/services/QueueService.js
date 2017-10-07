@@ -90,6 +90,22 @@ class QueueService {
 
         });
     }
+
+    /**
+     * Notifies client side application about recommended hospital
+     */
+    static calculateAllMediumTime() {
+        logger.log('info', `${_logPrefix} Going to calculate medium time for all available hospitals`);
+
+        return new Promise((resolve, reject) => {
+            HospitalAnalysisModel.aggregateRecommendedHospital((err, data) => {
+                if (err) return reject(err);
+
+                resolve(data);
+            });
+        });
+    }
+
     /**
      * Pushs a new user into a specific hospital Queue
      * @param {String} hospitalCode 
@@ -267,7 +283,6 @@ class QueueService {
             logger.log('info', `${_logPrefix} Analytics data saved!`);
 
             this.notifyHospitalChange(updatedHospital, io);
-            this.notifyHospitalRecommendation(io);
         })
 
     }
@@ -315,22 +330,6 @@ class QueueService {
             });
         })
     }
-
-
-    /**
-     * Notifies client side application about recommended hospital
-     * @param {Object} io 
-     */
-    static async notifyHospitalRecommendation(io) {
-        logger.log('info', `${_logPrefix} Going to calculate best hospital for user`);
-
-        HospitalAnalysisModel.aggregateRecommendedHospital((err, data) => {
-            if (err) return err;
-
-            io.emit('hospitalRecommendation', data[0]);
-        });
-    }
-
 }
 
 export default QueueService;

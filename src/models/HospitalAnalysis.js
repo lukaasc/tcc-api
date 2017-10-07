@@ -90,21 +90,15 @@ hospitalAnalyseSchema.statics.aggregateStatisticData = function (hospitalCode, i
 hospitalAnalyseSchema.statics.aggregateRecommendedHospital = function (callback) {
     return this.aggregate(
         [{
-                $group: {
-                    _id: "$hospitalCode",
-                    mediumTime: {
-                        $avg: {
-                            $sum: "$timeSpent"
-                        }
+            $group: {
+                _id: "$hospitalCode",
+                mediumTime: {
+                    $avg: {
+                        $sum: "$timeSpent"
                     }
-                },
-            },
-            {
-                $sort: {
-                    mediumTime: 1
                 }
-            }
-        ]
+            },
+        }]
     ).exec(callback);
 }
 
